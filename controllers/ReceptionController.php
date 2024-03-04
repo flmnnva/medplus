@@ -4,9 +4,12 @@ namespace app\controllers;
 
 use app\models\Reception;
 use app\models\ReceptionSearch;
+use app\models\Status;
+use app\models\User;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+
 
 /**
  * ReceptionController implements the CRUD actions for Reception model.
@@ -38,28 +41,25 @@ class ReceptionController extends Controller
      */
     public function actionIndex()
     {
+        $user = User::getInstance();
+        if (!$user) {
+            return $this->goHome();
+        }
         $searchModel = new ReceptionSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+        if($user->isAdmin()) {
+            $dataProvider = $searchModel->search($this->request->queryParams);
+            return $this->render('index_admin',[
+                'searchModel' =>$searchModel,
+                'dataprovider' => $dataProvider,
+            ]);
+        }
+        $dataProvider = $searchModel->search($this->request->queryParams,$user->id);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
-
-    /**
-     * Displays a single Reception model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
     /**
      * Creates a new Reception model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -70,8 +70,12 @@ class ReceptionController extends Controller
         $model = new Reception();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->load($this->request->post())) {
+                $model->user_id = $user->id;
+                $model->status_id = Status::NEW_STATUS_ID;
+                    if($model->save()) {
+                return $this->redirect(['index']);
+                }
             }
         } else {
             $model->loadDefaultValues();
@@ -91,29 +95,19 @@ class ReceptionController extends Controller
      */
     public function actionUpdate($id)
     {
+        $user = User::getInstance();
+        if (!$user || !$user->isAdmin()) {
+            return $this->goHome();
+        }
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [
             'model' => $model,
         ]);
-    }
-
-    /**
-     * Deletes an existing Reception model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
     }
 
     /**

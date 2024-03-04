@@ -35,7 +35,29 @@ $this->params['breadcrumbs'][] = $this->title;
             'date_of_reception',
             'description:ntext',
             'user',
-            'status',
+            [
+                'attribute' => 'status',
+                'content' => function ($report) {
+                    $html = Html::beginForm(['update', 'id' => $report->id]);
+                    $html .= Html::activeDropDownList($report, 'status_id',
+                        [
+                            1 => 'Подтверждена',
+                            2 => 'Отклонена'
+                        ],
+                        [
+                            'prompt' => [
+                                'text' => 'Новая',
+                                'options' => [
+                                    'style' => 'display:none'
+                                ]
+                            ]
+                        ]
+                    );
+                    $html .= Html::submitButton('Подтвердить', ['class' => 'btn btn-link']);
+                    $html .= Html::endForm();
+                    return $html;
+                }
+            ],
         ],
     ]); ?>
 
