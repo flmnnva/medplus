@@ -50,7 +50,7 @@ class ReceptionController extends Controller
             $dataProvider = $searchModel->search($this->request->queryParams);
             return $this->render('index_admin',[
                 'searchModel' =>$searchModel,
-                'dataprovider' => $dataProvider,
+                'dataProvider' => $dataProvider,
             ]);
         }
         $dataProvider = $searchModel->search($this->request->queryParams,$user->id);

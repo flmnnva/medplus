@@ -21,7 +21,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
     public function __toString()
     {
-        return $this->login;
+        return $this->tel;
     }
     /**
      * {@inheritdoc}
@@ -53,12 +53,13 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'fio' => Yii::t('app', 'Fio'),
-            'password' => Yii::t('app', 'Password'),
-            'date_of_birth' => Yii::t('app', 'Date Of Birth'),
-            'tel' => Yii::t('app', 'Tel'),
-            'role_id' => Yii::t('app', 'Role ID'),
+            'id' => 'ID',
+            'fio' => 'ФИО',
+            'password' => 'Пароль',
+            'date_of_birth' => 'Дата рождения',
+            'tel' =>  'Телефон',
+            'role_id' =>  'Role ID',
+            'password_confirmation' =>  'Повторите пароль',
         ];
     }
 

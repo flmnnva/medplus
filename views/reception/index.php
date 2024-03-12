@@ -10,7 +10,7 @@ use yii\widgets\Pjax;
 /** @var app\models\ReceptionSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Receptions';
+$this->title = 'Приемы';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="reception-index">
@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Reception', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Создать заявку', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php Pjax::begin(); ?>
